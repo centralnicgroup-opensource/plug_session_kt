@@ -6,7 +6,6 @@ defmodule Plug.Session.KT do
   require Logger
 
   @behaviour Plug.Session.Store
-
   @max_tries 10
 
   def init(opts) do
@@ -19,8 +18,8 @@ defmodule Plug.Session.KT do
     Logger.debug("looking for a session for ID: #{sid}")
     case :kterl.get(kt, "session:#{sid}") do
       {:ok, :undefined} -> {nil, %{}}
-      {:ok, data}       -> 
-        {:ok, res} = PoisonPlus.decode(:erlang.element(4, data))
+      {:ok, data}       ->
+        {:ok, res} = PoisonPlus.decode(elem(data, 3))
         Logger.debug("found session data: #{inspect res}")
         {sid, res}
       _                 -> {nil, %{}}
@@ -72,6 +71,4 @@ defmodule Plug.Session.KT do
     {:ok, pid} = :kterl.start_link(host, port, 5000)
     pid
   end
-
-
 end
