@@ -20,7 +20,7 @@ defmodule Plug.Session.KT do
     case :kterl.get(kt, "session:#{sid}") do
       {:ok, :undefined} -> {nil, %{}}
       {:ok, data}       -> 
-        {:ok, res} = Poison.decode(:erlang.element(4, data))
+        {:ok, res} = PoisonPlus.decode(:erlang.element(4, data))
         Logger.debug("found session data: #{inspect res}")
         {sid, res}
       _                 -> {nil, %{}}
@@ -32,7 +32,7 @@ defmodule Plug.Session.KT do
     kt = connect_kt()
     # :poolboy.transaction(table, &(:kterl.add(&1, "session:#{sid}", data)))
     Logger.debug("updating session with ID: #{sid} pushing in data: #{inspect data}")
-    {:ok, json} = Poison.encode(data)
+    {:ok, json} = PoisonPlus.encode(data)
     :kterl.replace(kt, "session:#{sid}", json)
     sid
   end
@@ -52,7 +52,7 @@ defmodule Plug.Session.KT do
     Logger.debug("creating new session with ID: #{sid} and data: #{inspect data}")
     kt = connect_kt()
     # case :poolboy.transaction(table, &(store_data_with_ttl(&1, ttl, sid, data))) do
-      {:ok, json} = Poison.encode(data)
+      {:ok, json} = PoisonPlus.encode(data)
       case store_data_with_ttl(kt, ttl, sid, json) do
       :ok -> sid
       _   -> put_new(data, {kt, ttl}, counter + 1)
