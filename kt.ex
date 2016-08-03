@@ -44,7 +44,7 @@ defmodule Plug.Session.KT do
     :ok
   end
 
-  defp put_new(data, {pid, ttl}, counter \\ 0) when counter < @max_tries do
+  defp put_new(data, {ttl}, counter \\ 0) when counter < @max_tries do
     # FIXME this should follow our IWMN standard of session:[HMAC USERID]:[random string]
     # IO.puts("no idea where this PID is coming from: #{inspect pid}")
     sid = :crypto.strong_rand_bytes(96) |> Base.encode64
