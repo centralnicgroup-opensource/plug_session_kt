@@ -1,4 +1,4 @@
-defmodule Plug.Session.KT do
+defmodule PlugSessionKT.Store do
   @moduledoc """
   Stores the session in a KyotoTycoon.
   """
