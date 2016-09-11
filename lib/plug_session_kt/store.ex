@@ -14,7 +14,6 @@ defmodule PlugSessionKT.Store do
 
   def get(_conn, sid, _) do
     # case :poolboy.transaction(table, &(:kterl.get(&1, "session:#{sid}"))) do
-    kt = connect_kt()
     Logger.debug("looking for a session for ID: #{sid}")
     case :kterl.get(kt, "session:#{sid}") do
       {:ok, :undefined} -> {nil, %{}}
@@ -28,7 +27,6 @@ defmodule PlugSessionKT.Store do
 
   def put(_conn, nil, data, state), do: put_new(data, state)
   def put(_conn, sid, data, _) do
-    kt = connect_kt()
     # :poolboy.transaction(table, &(:kterl.add(&1, "session:#{sid}", data)))
     Logger.debug("updating session with ID: #{sid} pushing in data: #{inspect data}")
     {:ok, json} = PoisonPlus.encode(data)
@@ -37,7 +35,6 @@ defmodule PlugSessionKT.Store do
   end
 
   def delete(_conn, sid, _) do
-    kt = connect_kt()
     # :poolboy.transaction(table, &(:kterl.remove(&1, "session:#{sid}")))
     Logger.debug("removing session with ID: #{sid}")
     :kterl.remove(kt, "session:#{sid}")
