@@ -14,7 +14,7 @@ use Application
   end
 
   def pool_spec() do
-    worker_args = {:redo, conf[:redis]}
+    worker_args = {:redo, conf[:kterl]}
     child_spec(conf[:name], conf[:pool], worker_args)
   end
 

@@ -28,7 +28,7 @@ defmodule PlugSessionKt.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:credo, "~> 0.4", only: [:dev, :test]},
-     {:kterl, github: "ideegeo/kterl"},
+     {:kterl, github: "iwantmyname/kterl"},
      {:poolboy, "~> 1.5"}
     ]
   end

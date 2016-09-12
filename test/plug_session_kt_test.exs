@@ -4,13 +4,19 @@ defmodule PlugSessionKtTest do
 
   @default_opts [
     store: :kt
-    key:
+    key: "_session_key"
     table: :kt_sessions,
     max_age: 60
   ]
 
   defp put_env do
-    Application.put_env()
+    Application.put_env(
+      :plug_session_kt,
+      :config,
+      [
+        kt: [host: 'localhost', port: 1978]
+      ]
+    )
   end
 
   setup_all do
@@ -19,6 +25,13 @@ defmodule PlugSessionKtTest do
     :ok = Application.start(:plug_session_kt)
     IO.puts "Kyoto Tycoon has started"
   end
+
+
+  #get
+  #put
+  #delete
+  #putnew
+  #store_data_with_ttl
 
 
 end
