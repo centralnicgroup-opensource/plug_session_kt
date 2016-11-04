@@ -17,7 +17,7 @@ defmodule PlugSessionKT.Store do
     case :poolboy.transaction(table, &(:kterl.get(&1, "session:#{decode_sid(sid)}"))) do
       {:ok, :undefined} -> {nil, %{}}
       {:ok, data}       ->
-        {:ok, res} = PoisonPlus.decode(:kterl_result.get_value(data))
+        {:ok, res} = Venom.decode(:kterl_result.get_value(data))
         res1 = Map.put(res, "__expire", :kterl_result.get_exptime(data))
         Logger.debug("found session data: #{inspect res1}")
         {sid, res1}
@@ -30,7 +30,7 @@ defmodule PlugSessionKT.Store do
     kt = connect_kt()
     Logger.debug("updating session with ID: #{decoded_sid(sid)} pushing in data: #{inspect data}")
     {ttl, data1} = Map.pop(data, "__expire", now())
-    {:ok, json} = PoisonPlus.encode(data1)
+    {:ok, json} = Venom.encode(data1)
     :kterl.replace(kt, "session:#{decoded_sid(sid)}", json, [{:xt, ttl}])
     sid
   end
@@ -48,7 +48,7 @@ defmodule PlugSessionKT.Store do
     sid = :crypto.strong_rand_bytes(96) |> Base.encode64
     Logger.debug("creating new session with ID: #{decoded_sid(sid)} and data: #{inspect data}")
     kt = connect_kt()
-    {:ok, json} = PoisonPlus.encode(data)
+    {:ok, json} = Venom.encode(data)
       case store_data_with_ttl(kt, ttl, sid, json) do
       :ok -> sid
       _   -> put_new(data, {kt, ttl}, counter + 1)
